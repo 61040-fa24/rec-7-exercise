@@ -18,7 +18,7 @@ export const useSettingsStore = defineStore(
     };
 
     const unsuppressUser = async (username: string) => {
-      // TODO: Implement this function. Hint: take a look at suppressUser.
+      // TODO 5: Implement this function. Hint: take a look at suppressUser.
     };
 
     const updateSuppressedUsers = async () => {
