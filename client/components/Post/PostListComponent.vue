@@ -6,14 +6,18 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
+import { useSettingsStore } from "../../stores/settings";
 import SearchPostForm from "./SearchPostForm.vue";
 
-const { isLoggedIn } = storeToRefs(useUserStore());
+const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 
 // TODO 6: When hidePostsFromSuppressedUsers is true, display text saying "This is a post from a user you've suppressed" in
 // place of the post information for every post by a suppressed user.
+const { suppressedUsers } = storeToRefs(useSettingsStore());
+const { updateSuppressedUsers } = useSettingsStore();
 
 const loaded = ref(false);
+let hidePostsFromSuppressedUsers = ref(true);
 let posts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 let searchAuthor = ref("");
@@ -22,7 +26,7 @@ async function getPosts(author?: string) {
   let query: Record<string, string> = author !== undefined ? { author } : {};
   let postResults;
   try {
-    postResults = await fetchy("/api/posts", "GET", { query });
+    postResults = await fetchy("api/posts", "GET", { query });
   } catch (_) {
     return;
   }
@@ -34,8 +38,13 @@ function updateEditing(id: string) {
   editing.value = id;
 }
 
+function toggleSuppressionStatus() {
+  hidePostsFromSuppressedUsers.value = !hidePostsFromSuppressedUsers.value;
+}
+
 onBeforeMount(async () => {
   await getPosts();
+  await updateSuppressedUsers();
   loaded.value = true;
 });
 </script>
@@ -50,10 +59,15 @@ onBeforeMount(async () => {
     <h2 v-else>Posts by {{ searchAuthor }}:</h2>
     <SearchPostForm @getPostsByAuthor="getPosts" />
   </div>
+  <div v-if="isLoggedIn" class="row">
+    <button v-if="hidePostsFromSuppressedUsers" class="btn-small pure-button" @click="toggleSuppressionStatus">Show posts from suppressed users</button>
+    <button v-else class="btn-small pure-button" @click="toggleSuppressionStatus">Hide posts from suppressed users</button>
+  </div>
   <section class="posts" v-if="loaded && posts.length !== 0">
     <article v-for="post in posts" :key="post._id">
-      <PostComponent v-if="editing !== post._id" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
-      <EditPostForm v-else :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+      <PostComponent v-if="editing !== post._id && (!hidePostsFromSuppressedUsers || !suppressedUsers.includes(post.author))" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+      <EditPostForm v-else-if="editing" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+      <p v-else>This is a post from a user you've suppressed.</p>
     </article>
   </section>
   <p v-else-if="loaded">No posts found</p>

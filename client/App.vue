@@ -4,6 +4,7 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { computed, onBeforeMount } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
+import router from "./router";
 
 const currentRoute = useRoute();
 const currentRouteName = computed(() => currentRoute.name);
@@ -19,11 +20,13 @@ onBeforeMount(async () => {
     // Hint: Look at the documentation for the router.push() method
     // ---------------
     // ---------------
+    if (isLoggedIn.value) {
+      await router.push("/profile");
+    }
   } catch {
     // User is not logged in
   }
 });
-
 </script>
 
 <template>
@@ -41,6 +44,7 @@ onBeforeMount(async () => {
         </li>
         <!-- TODO 2: How can we display the Profile tab in the Nav Bar only if a user is logged in? -->
         <li v-if="isLoggedIn">
+          <RouterLink :to="{ name: 'Profile' }" :class="{ underline: currentRouteName == 'Profile' }"> Profile </RouterLink>
           <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings </RouterLink>
         </li>
         <li v-else>
