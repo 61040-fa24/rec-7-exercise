@@ -9,6 +9,7 @@ import SettingView from "../views/SettingView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
+  // TODO 4: Add in the route for our new Profile page!
   routes: [
     {
       path: "/",

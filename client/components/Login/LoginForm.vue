@@ -9,9 +9,12 @@ const { loginUser, updateSession } = useUserStore();
 
 async function login() {
   await loginUser(username.value, password.value);
-  void updateSession();
-  void router.push({ name: "Home" });
+  // TODO 3: Once we log in, how can we update the currently logged in user and navigate to their profile?
+  // Hint 1: Look at this file in the original starter code to see how we currently do this for 'Home'
+  // ---------------
+  // ---------------
 }
+
 </script>
 
 <template>

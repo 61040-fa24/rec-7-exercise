@@ -15,10 +15,15 @@ const { toast } = storeToRefs(useToastStore());
 onBeforeMount(async () => {
   try {
     await userStore.updateSession();
+    // TODO 1: When we initially mount our app, how can we navigate to the profile page if they are logged in?
+    // Hint: Look at the documentation for the router.push() method
+    // ---------------
+    // ---------------
   } catch {
     // User is not logged in
   }
 });
+
 </script>
 
 <template>
@@ -34,6 +39,7 @@ onBeforeMount(async () => {
         <li>
           <RouterLink :to="{ name: 'Home' }" :class="{ underline: currentRouteName == 'Home' }"> Home </RouterLink>
         </li>
+        <!-- TODO 2: How can we display the Profile tab in the Nav Bar only if a user is logged in? -->
         <li v-if="isLoggedIn">
           <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings </RouterLink>
         </li>
