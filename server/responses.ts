@@ -1,6 +1,7 @@
 import { Authing } from "./app";
 import { AlreadyFriendsError, FriendNotFoundError, FriendRequestAlreadyExistsError, FriendRequestDoc, FriendRequestNotFoundError } from "./concepts/friending";
 import { PostAuthorNotMatchError, PostDoc } from "./concepts/posting";
+import { SuppressDoc } from "./concepts/suppressing";
 import { Router } from "./framework/router";
 
 /**
@@ -36,6 +37,14 @@ export default class Responses {
     const to = requests.map((request) => request.to);
     const usernames = await Authing.idsToUsernames(from.concat(to));
     return requests.map((request, i) => ({ ...request, from: usernames[i], to: usernames[i + requests.length] }));
+  }
+
+  /**
+   * Returns a list of usernames of suppressed users
+   */
+  static async suppressedUsernames(suppression: SuppressDoc[]) {
+    const suppressedUsernames = await Authing.idsToUsernames(suppression.map((suppression) => suppression.suppressee));
+    return suppressedUsernames;
   }
 }
 

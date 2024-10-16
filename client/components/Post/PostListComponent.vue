@@ -10,6 +10,9 @@ import SearchPostForm from "./SearchPostForm.vue";
 
 const { isLoggedIn } = storeToRefs(useUserStore());
 
+// TODO: When hidePostsFromSuppressedUsers is true, display text saying "This is a post from a user you've suppressed" in
+// place of the post information for every post by a suppressed user.
+
 const loaded = ref(false);
 let posts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");

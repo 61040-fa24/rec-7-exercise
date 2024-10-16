@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Authing, Friending, Posting, Sessioning } from "./app";
+import { Authing, Friending, Posting, Sessioning, Suppressing } from "./app";
 import { PostOptions } from "./concepts/posting";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -151,6 +151,26 @@ class Routes {
     const user = Sessioning.getUser(session);
     const fromOid = (await Authing.getUserByUsername(from))._id;
     return await Friending.rejectRequest(fromOid, user);
+  }
+
+  @Router.get("/suppression")
+  async getSuppressedUsers(session: SessionDoc) {
+    const suppressor = Sessioning.getUser(session);
+    return await Responses.suppressedUsernames(await Suppressing.getSuppressedUsers(suppressor));
+  }
+
+  @Router.post("/suppression/:user")
+  async suppressUser(session: SessionDoc, user: string) {
+    const suppresser = Sessioning.getUser(session);
+    const suppressee = (await Authing.getUserByUsername(user))._id;
+    return await Suppressing.add(suppresser, suppressee);
+  }
+
+  @Router.delete("/suppression/:user")
+  async unsuppressUser(session: SessionDoc, user: string) {
+    const suppresser = Sessioning.getUser(session);
+    const suppressee = (await Authing.getUserByUsername(user))._id;
+    return await Suppressing.remove(suppresser, suppressee);
   }
 }
 
