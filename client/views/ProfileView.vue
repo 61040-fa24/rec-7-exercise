@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PostListOwn from "@/components/Post/PostListOwn.vue";
+import PostListComponent from "@/components/Post/PostListComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 
@@ -12,7 +12,7 @@ void updateSession();
 <template>
   <main>
     <h1>{{ currentUsername }}</h1>
-    <PostListOwn />
+    <PostListComponent :own="true" />
   </main>
 </template>
 
