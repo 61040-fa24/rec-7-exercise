@@ -23,12 +23,6 @@ export const useSettingsStore = defineStore(
 
     const unsuppressUser = async (username: string) => {
       // TODO 5: Implement this function. Hint: take a look at suppressUser.
-      try {
-        await fetchy(`/api/suppression/${username}`, "DELETE");
-      } catch {
-        return;
-      }
-      await updateSuppressedUsers();
     };
 
     const updateSuppressedUsers = async () => {

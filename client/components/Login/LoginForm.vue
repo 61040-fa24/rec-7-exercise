@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import router from "@/router";
 import { useSettingsStore } from "@/stores/settings";
 import { useUserStore } from "@/stores/user";
 import { ref } from "vue";
@@ -15,9 +14,6 @@ async function login() {
   // Hint 1: Look at this file in the original starter code to see how we currently do this for 'Home'
   // ---------------
   // ---------------
-  await updateSuppressedUsers();
-  await updateSession();
-  void router.push({ name: "Profile" });
 }
 </script>
 
