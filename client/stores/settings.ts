@@ -8,6 +8,10 @@ export const useSettingsStore = defineStore(
   () => {
     const suppressedUsers = ref<Array<string>>([]);
 
+    const resetSuppressed = async () => {
+      suppressedUsers.value = [];
+    };
+
     const suppressUser = async (username: string) => {
       try {
         await fetchy(`/api/suppression/${username}`, "POST");
@@ -43,6 +47,7 @@ export const useSettingsStore = defineStore(
       suppressUser,
       unsuppressUser,
       updateSuppressedUsers,
+      resetSuppressed,
     };
   },
   { persist: true },
