@@ -46,7 +46,6 @@ onBeforeMount(async () => {
   if (props.own) {
     await getPosts(currentUsername.value);
   } else {
-    console.log("hi" + suppressedUsers.value);
     await getPosts();
   }
   loaded.value = true;
